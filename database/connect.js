@@ -8,7 +8,7 @@ mongoose
   })
   .then(console.log("connected succefully"))
   .catch((err) => {
-    console.log(err);
+    console.log("error occured while db connection", err);
   });
 
 module.exports = mongoose;
