@@ -72,6 +72,78 @@ app.delete("/del/:id", (req, res) => {
       res.status(400).send(err);
     });
 });
+
+// Crud Operations for task
+
+app.get("/tasklists/:listtaskid/tasks/:taskid", (req, res) => {
+  let listtaskid = req.params.listtaskid;
+
+  Task.find({
+    _tasklistId: listtaskid,
+    _id: req.params.taskid,
+  })
+    .then((foundTask) => {
+      res.status(200).send(foundTask);
+    })
+    .catch((err) => {
+      res.status(400).send(err);
+    });
+});
+app.get("/tasklists/:listtaskid/tasks", (req, res) => {
+  let listtaskid = req.params.listtaskid;
+
+  Task.find({ _tasklistId: listtaskid })
+    .then((foundTask) => {
+      res.status(200).send(foundTask);
+    })
+    .catch((err) => {
+      res.status(400).send(err);
+    });
+});
+
+app.post("/create/:tasklistid/tasks", (req, res) => {
+  let data = req.body;
+  data._tasklistId = req.params.tasklistid;
+  task = new Task(data);
+  task
+    .save()
+    .then((createdTask) => {
+      res.status(201).send(createdTask);
+    })
+    .catch((err) => {
+      res.status(400).send(err);
+    });
+});
+
+app.put("/updateTask/:tasklistid/tasks/:taskId", (req, res) => {
+  let data = req.body;
+  Task.findByIdAndUpdate(
+    {
+      _tasklistId: req.params.tasklistid,
+      _id: req.params.taskId,
+    },
+    data
+  )
+    .then((updatedTask) => {
+      res.status(201).send(updatedTask);
+    })
+    .catch((err) => {
+      res.status(400).send(err);
+    });
+});
+
+app.delete("/delTask/:tasklistid/tasks/:taskId", (req, res) => {
+  Task.findByIdAndDelete({
+    _tasklistId: req.params.tasklistid,
+    _id: req.params.taskId,
+  })
+    .then((deletedTask) => {
+      res.status(201).send(deletedTask);
+    })
+    .catch((err) => {
+      res.status(400).send(err);
+    });
+});
 app.listen(3000, () => {
   console.log("server starter on port 3000");
 });
